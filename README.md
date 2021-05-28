@@ -11,4 +11,4 @@ This sample project is based off unity-webview's sample project. Please refer to
 1. Install Unity (2019 LTS release)
 2. Open `Assets/Sample.unity`
 3. Clone <https://github.com/vittascience/unity-webview> onto your computer
-4. Open dist/unity-webview.unitypackage and import all files.
+4. Open `dist/unity-webview.unitypackage` and import all files.
