@@ -4,6 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>Unity WebView</title>
   <script src="./js/bootstrap.min.js"></script>
+  <script src="./js/jquery-3.6.0.min.js"></script>
   <script src="./js/sample.js"></script>
   <link href="./css/bootstrap.min.css" rel="stylesheet" />
 </head>
@@ -25,7 +26,7 @@
       <div class="mb-5">
         <div class="input-group input-group-lg mb-3">
           <input id="webpageMessage" type="text" class="form-control" placeholder="Message à envoyer à Unity" aria-label="Message à envoyer à Unity" aria-describedby="button-addon2">
-          <button class="btn btn-success" type="button" onclick="Unity.call('form?msg=' + document.getElementById('webpageMessage').value); return false;">Button</button>
+          <button class="btn btn-success" type="button" onclick="sendUnityMessage(document.getElementById('webpageMessage').value)">Web ➡ Unity</button>
         </div>
       </div>
 
@@ -34,8 +35,8 @@
       <div class="row g-5">
         <div class="col-md-9">
           <h2>Starter projects</h2>
-          <p>Le texte de ce champ de texte est le texte envoyé par Unity lorsque vous cliquez sur le bouton [REDACTED].</p>
-          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+          <p>Le texte de ce champ de texte est le texte envoyé par Unity lorsque vous cliquez sur le bouton [M] en haut de l'écran.</p>
+          <textarea id="unityReceivedText" class="form-control" rows="3"></textarea>
         </div>
 
         <div class="col-md-3">
@@ -53,5 +54,15 @@
     </footer>
   </div>
 </body>
+<script>
+function sendUnityMessage(msg) {
+  let json = {
+    timestamp: Date.now(),
+    message: msg
+  }
+  Unity.call(JSON.stringify(json));
+}
+
+</script>
 
 </html>

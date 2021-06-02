@@ -15,6 +15,7 @@ public class CopyStreamingAssets : MonoBehaviour
     {
         "index.html",
         "js/bootstrap.min.js",
+        "js/jquery-3.6.0.min.js",
         "js/sample.js",
         "css/bootstrap.min.css",
         "img/vittascience.svg",

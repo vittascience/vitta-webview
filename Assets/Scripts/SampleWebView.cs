@@ -115,7 +115,7 @@ public class SampleWebView : MonoBehaviour
                     "   }" +
                     "};");
 #endif
-                webViewObject.EvaluateJS(@"Unity.call('ua=' + navigator.userAgent)");
+                //webViewObject.EvaluateJS(@"Unity.call('ua=' + navigator.userAgent)");
             },
             //transparent: false,
             //zoom: true,
@@ -195,49 +195,17 @@ public class SampleWebView : MonoBehaviour
     {
         GUIStyle myButtonStyle = new GUIStyle(GUI.skin.button);
         myButtonStyle.fontSize = 50;
-
         var x = 10;
 
-        GUI.enabled = webViewObject.CanGoBack();
-        if (GUI.Button(new Rect(x, 10, 80, 80), "<", myButtonStyle)) {
-            webViewObject.GoBack();
-        }
         GUI.enabled = true;
-        x += 90;
-
-        GUI.enabled = webViewObject.CanGoForward();
-        if (GUI.Button(new Rect(x, 10, 80, 80), ">", myButtonStyle)) {
-            webViewObject.GoForward();
+        if (GUI.Button(new Rect(x, 10, 80, 80), "M", myButtonStyle)) {
+            string message = @"{timestamp: " + System.DateTimeOffset.Now.ToUnixTimeSeconds() + ", message: \"Hello from Unity\"}";
+            Debug.Log(string.Format("CallToJS[{0}]", message));
+            webViewObject.EvaluateJS("$('#unityReceivedText').val('" + message + "')");
         }
-        GUI.enabled = true;
-        x += 90;
 
-        if (GUI.Button(new Rect(x, 10, 80, 80), "r", myButtonStyle)) {
-            webViewObject.Reload();
-        }
-        x += 90;
 
-        GUI.TextField(new Rect(x, 10, 180, 80), "" + webViewObject.Progress());
-        x += 190;
-
-        if (GUI.Button(new Rect(x, 10, 80, 80), "*", myButtonStyle)) {
-            var g = GameObject.Find("WebViewObject");
-            if (g != null) {
-                Destroy(g);
-            } else {
-                StartCoroutine(Start());
-            }
-        }
-        x += 90;
-
-        if (GUI.Button(new Rect(x, 10, 80, 80), "c", myButtonStyle)) {
-            Debug.Log(webViewObject.GetCookies(Url));
-        }
-        x += 90;
-
-        if (GUI.Button(new Rect(x, 10, 80, 80), "x", myButtonStyle)) {
-            webViewObject.ClearCookies();
-        }
-        x += 90;
+        //var msg = document.getElementById('unityReceivedText');
+        //msg.value = '{timestamp: 000, message: 'Hello from Unity!'}';
     }
 }
