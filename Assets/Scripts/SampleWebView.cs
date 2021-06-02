@@ -19,7 +19,7 @@
  */
 
 using System.Collections;
-using UnityEngine;
+using UnityEngine; 
 #if UNITY_2018_4_OR_NEWER
 using UnityEngine.Networking;
 #endif
@@ -30,22 +30,30 @@ public class SampleWebView : MonoBehaviour
     public string Url;
     public Text status;
     WebViewObject webViewObject;
+    CopyStreamingAssets copyStreamingAssets;
+
+    /// <summary>
+    /// Directory name under StreamingAssets in which your files are stored
+    /// </summary>
+    private const string BaseDir = "webview-resources";
+
+
 
     IEnumerator Start()
     {
         webViewObject = (new GameObject("WebViewObject")).AddComponent<WebViewObject>();
+        copyStreamingAssets = (new GameObject("CopyStreamingAssets")).AddComponent<CopyStreamingAssets>();
+
         webViewObject.Init(
             cb: (msg) =>
             {
                 Debug.Log(string.Format("CallFromJS[{0}]", msg));
                 status.text = msg;
-                status.GetComponent<Animation>().Play();
             },
             err: (msg) =>
             {
                 Debug.Log(string.Format("CallOnError[{0}]", msg));
                 status.text = msg;
-                status.GetComponent<Animation>().Play();
             },
             started: (msg) =>
             {
@@ -107,7 +115,7 @@ public class SampleWebView : MonoBehaviour
                     "   }" +
                     "};");
 #endif
-                webViewObject.EvaluateJS(@"Unity.call('ua=' + navigator.userAgent)");
+                //webViewObject.EvaluateJS(@"Unity.call('ua=' + navigator.userAgent)");
             },
             //transparent: false,
             //zoom: true,
@@ -133,7 +141,7 @@ public class SampleWebView : MonoBehaviour
         // Add BASIC authentication feature (Android and iOS with WKWebView only) by takeh1k0 · Pull Request #570 · gree/unity-webview
         //webViewObject.SetBasicAuthInfo("id", "password");
 
-        webViewObject.SetMargins(0, 0, 0, 0);
+        webViewObject.SetMargins(0,100, 0, 0);
         webViewObject.SetVisibility(true);
 
 #if !UNITY_WEBPLAYER && !UNITY_WEBGL
@@ -149,6 +157,8 @@ public class SampleWebView : MonoBehaviour
                 var url = Url.Replace(".html", ext);
                 var src = System.IO.Path.Combine(Application.streamingAssetsPath, url);
                 var dst = System.IO.Path.Combine(Application.persistentDataPath, url);
+                Debug.Log(string.Format("PersistentDataPath[{0}]", dst));
+
                 byte[] result = null;
                 if (src.Contains("://")) {  // for Android
 #if UNITY_2018_4_OR_NEWER
@@ -183,48 +193,19 @@ public class SampleWebView : MonoBehaviour
 
     void OnGUI()
     {
+        GUIStyle myButtonStyle = new GUIStyle(GUI.skin.button);
+        myButtonStyle.fontSize = 50;
         var x = 10;
 
-        GUI.enabled = webViewObject.CanGoBack();
-        if (GUI.Button(new Rect(x, 10, 80, 80), "<")) {
-            webViewObject.GoBack();
-        }
         GUI.enabled = true;
-        x += 90;
-
-        GUI.enabled = webViewObject.CanGoForward();
-        if (GUI.Button(new Rect(x, 10, 80, 80), ">")) {
-            webViewObject.GoForward();
+        if (GUI.Button(new Rect(x, 10, 80, 80), "M", myButtonStyle)) {
+            string message = @"{timestamp: " + System.DateTimeOffset.Now.ToUnixTimeSeconds() + ", message: \"Hello from Unity\"}";
+            Debug.Log(string.Format("CallToJS[{0}]", message));
+            webViewObject.EvaluateJS("$('#unityReceivedText').val('" + message + "')");
         }
-        GUI.enabled = true;
-        x += 90;
 
-        if (GUI.Button(new Rect(x, 10, 80, 80), "r")) {
-            webViewObject.Reload();
-        }
-        x += 90;
 
-        GUI.TextField(new Rect(x, 10, 180, 80), "" + webViewObject.Progress());
-        x += 190;
-
-        if (GUI.Button(new Rect(x, 10, 80, 80), "*")) {
-            var g = GameObject.Find("WebViewObject");
-            if (g != null) {
-                Destroy(g);
-            } else {
-                StartCoroutine(Start());
-            }
-        }
-        x += 90;
-
-        if (GUI.Button(new Rect(x, 10, 80, 80), "c")) {
-            Debug.Log(webViewObject.GetCookies(Url));
-        }
-        x += 90;
-
-        if (GUI.Button(new Rect(x, 10, 80, 80), "x")) {
-            webViewObject.ClearCookies();
-        }
-        x += 90;
+        //var msg = document.getElementById('unityReceivedText');
+        //msg.value = '{timestamp: 000, message: 'Hello from Unity!'}';
     }
 }

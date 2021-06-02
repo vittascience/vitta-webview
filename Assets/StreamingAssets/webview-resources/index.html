@@ -1,0 +1,68 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Unity WebView</title>
+  <script src="./js/bootstrap.min.js"></script>
+  <script src="./js/jquery-3.6.0.min.js"></script>
+  <script src="./js/sample.js"></script>
+  <link href="./css/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="col-lg-8 mx-auto p-3 py-md-5">
+    <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+      <a href="https://vittascience.com/" class="d-flex align-items-center text-dark text-decoration-none">
+
+        <img src="./img/vittascience.svg" alt="Vittascience logo" class="me-3" style="height:40px; width:auto;">
+        <span class="fs-4">Vittascience - Webview</span>
+      </a>
+    </header>
+
+    <main>
+      <h1>Hello Unity WebView !</h1>
+      <p id="msg" class="fs-5 col-md-12">Ce site est compris dans l'application Unity.<br>Cette page est une page de test destinée à tester les communications entre Unity et unity-webview.</p>
+
+      <div class="mb-5">
+        <div class="input-group input-group-lg mb-3">
+          <input id="webpageMessage" type="text" class="form-control" placeholder="Message à envoyer à Unity" aria-label="Message à envoyer à Unity" aria-describedby="button-addon2">
+          <button class="btn btn-success" type="button" onclick="sendUnityMessage(document.getElementById('webpageMessage').value)">Web ➡ Unity</button>
+        </div>
+      </div>
+
+      <hr class="col-3 col-md-2 mb-5">
+
+      <div class="row g-5">
+        <div class="col-md-9">
+          <h2>Starter projects</h2>
+          <p>Le texte de ce champ de texte est le texte envoyé par Unity lorsque vous cliquez sur le bouton [M] en haut de l'écran.</p>
+          <textarea id="unityReceivedText" class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="col-md-3">
+          <h2>Sites</h2>
+          <ul class="icon-list">
+            <li><a href="https://google.com">Google</a></li>
+            <li><a href="https://fr.vittascience.com/microbit/?mode=blocks&embed=1">Vittascience (interface Microbit)</a></li>
+            <li><a href="https://blockly-demo.appspot.com/static/demos/index.html">Blockly</a></li>
+          </ul>
+        </div>
+      </div>
+    </main>
+    <footer class="pt-5 my-5 text-muted border-top">
+      Créé par l'équipe Vittasience
+    </footer>
+  </div>
+</body>
+<script>
+function sendUnityMessage(msg) {
+  let json = {
+    timestamp: Date.now(),
+    message: msg
+  }
+  Unity.call(JSON.stringify(json));
+}
+
+</script>
+
+</html>
